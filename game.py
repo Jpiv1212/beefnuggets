@@ -1,5 +1,4 @@
 import pygame, random, sys, time, math
-import numpy as np
 pygame.init()
 disp = pygame.display.set_mode((1280,720))
 class Player():
@@ -14,15 +13,11 @@ class Thing():
     
     def __init__(self, pos, image):
         self.image = image
-##        self.image.convert()
         self.posx, self.posy = pos
 
     def render(self):
         y = (self.posy-player.posy+24.01)
         x = (self.posx-player.posx+24.01)
-##        len = np.linalg.norm([x,y])
-##        dot = np.dot([math.sin(player.rotation),math.cos(player.rotation)],[y,x])
-##        if dot/len >= .5:
         angle = math.atan(x/y)+math.pi/2
         if y<0: angle+=math.pi
         beef = abs(angle-player.rotation)
@@ -38,6 +33,7 @@ t = time.time()
 while True:
     disp.fill((0,0,0))
     nt = time.time()
+    dt = nt-t
     print(nt-t)
     t = nt
 ##    print(player.rotation)
@@ -49,17 +45,17 @@ while True:
                 sys.exit()
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
-        player.posx -= 5
+        player.posx -= 250*dt
     if keys[pygame.K_d]:
-        player.posx += 5
+        player.posx += 250*dt
     if keys[pygame.K_w]:
-        player.posy -= 5
+        player.posy -= 250*dt
     if keys[pygame.K_s]:
-        player.posy += 5
+        player.posy += 250*dt
     if keys[pygame.K_e]:
-        player.rotation -= .05
+        player.rotation -= 2.5*dt
     if keys[pygame.K_q]:
-        player.rotation += .05
+        player.rotation += 2.5*dt
     player.rotation %= 2*math.pi
 
     for thing in things:
