@@ -37,41 +37,107 @@ def raycast(slope, d):
     x,y = player.posx/48,player.posy/48
     if slope > 0:
         if d > 0:
-            i = incrementors[0]
             c = math.ceil(x),math.ceil(y)
         else:
-            i = incrementors[3]
             c = math.floor(x),math.floor(y)
     else:
         if d > 0:
-            i = incrementors[1]
-            c = math.floor(x),math.ceil(y)
-        else:
-            i = incrementors[2]
             c = math.ceil(x),math.floor(y)
+        else:
+            c = math.floor(x),math.ceil(y)
+    cx,cy = c
+    try:things[math.floor(x)][math.floor(y)].render()
+    except: return
     if abs((c[1]-y)/(c[0]-x))<abs(slope):
         oy = y
         y += d*abs(c[0]-x)*slope
-        print("change:",y-oy)
         try:
-            for y2 in range(int(oy),math.ceil(y),d):
-##                print(int(y2),int(x))
-                things[int(x)][int(y2)].render()
+            if y > cy:
+                while cy < y:
+                    things[math.floor(x)][cy].render()
+                    cy+=1
+            else:
+                while cy > y:
+                    cy -= 1
+                    if cy < 0: return
+                    things[math.floor(x)][cy].render()
+##            for y2 in range(math.floor(min(oy,y)),math.ceil(max(oy,y)),1):
+##                things[int(x)][int(y2)].render()
         except: pass
         else:
             x = c[0]
+##            print("Beef")
+            rayx(d, slope, x, y)
     else:
         ox = x
-        x += d*(c[1]-y)/slope
+        x += d*abs((c[1]-y)/slope)
         try:
-            for x2 in range(int(ox),math.ceil(x),d):
-##                print(int(y),int(x2))
-                things[int(x2)][int(y)].render()
+            if x > cx:
+                while cx < x:
+                    things[cx][math.floor(y)].render()
+                    cx += 1
+            else:
+                while cx > x:
+                    cx -= 1
+                    if cx < 0: return
+                    things[cx][math.floor(y)].render()
+##            for x2 in range(math.floor(min(ox,x)),math.ceil(max(ox,x)),1):
+##                things[int(x2)][int(y)].render()
         except: pass
         else:
             y = c[1]
-    
+            rayy(d, slope, x, y)
 
+def rayx(d, slope, x, y):
+    if d*slope < 0:
+        cy = math.floor(y)
+    else:
+        cy = math.ceil(y)
+    cx = x
+    x += d*abs((cy-y)/slope)
+    try:
+        if x > cx:
+            while cx < x:
+                things[cx][math.floor(y)].render()
+                cx += 1
+        else:
+            while cx > x:
+                cx -= 1
+                if cx < 0: return
+                things[cx][math.floor(y)].render()
+##            for x2 in range(math.floor(min(ox,x)),math.ceil(max(ox,x)),1):
+##                things[int(x2)][int(y)].render()
+    except: pass
+    else:
+        y = cy
+        rayy(d, slope, x, y)
+
+def rayy(d, slope, x, y):
+    if d < 0:
+        cx = math.floor(x)
+    else:
+        cx = math.ceil(x)
+    oy = y
+    y += d*abs(cx-x)*slope
+    try:
+        if y > oy:
+            while oy < y:
+                things[math.floor(x)][oy].render()
+                oy+=1
+        else:
+            while oy > y:
+                oy -= 1
+                if oy < 0: return
+                things[math.floor(x)][oy].render()
+##            for y2 in range(math.floor(min(oy,y)),math.ceil(max(oy,y)),1):
+##                things[int(x)][int(y2)].render()
+    except: pass
+    else:
+        x = cx
+##            print("Beef")
+        rayx(d, slope, x, y)
+
+span = 10
 t = time.time()
 while True:
     disp.fill((0,0,0))
@@ -86,6 +152,10 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+            elif event.key == pygame.K_DOWN:
+                span -= 1
+            elif event.key == pygame.K_UP:
+                span += 1
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         player.posx -= 250*dt
@@ -105,8 +175,20 @@ while True:
     else:
         d = -1
 ##    print(player.rotation,1/math.tan(player.rotation))
-    raycast(1/math.tan(player.rotation),d)
-    pygame.draw.line(disp, (255,0,0), (640,360), (640+48*d, 360+48/math.tan(player.rotation)*d))
+    for i in range(-span,span+1):
+        angle = (player.rotation+i/span*math.pi/6)%(2*math.pi)
+        if angle < math.pi:
+            cd = 1
+        else:
+            cd = -1
+        raycast(1/math.tan(angle),cd)
+    for i in range(-span,span+1):
+        angle = (player.rotation+i/span*math.pi/6)%(2*math.pi)
+        if angle < math.pi:
+            cd = 1
+        else:
+            cd = -1
+        pygame.draw.line(disp, (255,0,0), (640,360), (640+2000*cd, 360+2000/math.tan(angle)*cd))
 ##    for thing in things:
 ##              thing.render()
     pygame.display.flip()
