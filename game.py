@@ -162,10 +162,16 @@ while True:
                 span += 1
         elif event.type == pygame.MOUSEMOTION:
             mx, my = event.pos
-            mouseangle = math.atan(-(my-360)/(mx-640))+math.pi/2
+            if mx == 640:
+                if my > 0:
+                    mouseangle = 0
+                else:
+                    mouseangle = math.pi
+            else:
+                mouseangle = math.atan(-(my-360)/(mx-640))+math.pi/2
             if mx < 640: mouseangle += math.pi
     peef = player.rotation-mouseangle
-    if abs(peef) < turnspeed*dt or abs(peef)>2*math.pi-turnspeed*dt:
+    if abs(peef) <= turnspeed*dt or abs(peef)>=2*math.pi-turnspeed*dt:
         player.rotation = mouseangle
     else:
         player.rotation -= turnspeed*dt*peef/abs(peef)
