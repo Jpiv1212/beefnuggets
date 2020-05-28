@@ -72,7 +72,7 @@ def raycast(slope, d):
         else:
             x = c[0]
 ##            print("Beef")
-            rayx(d, slope, x, y)
+            rayx(d, slope, x, y, 0)
     else:
         ox = x
         x += d*abs((c[1]-y)/slope)
@@ -90,9 +90,12 @@ def raycast(slope, d):
         except: pass
         else:
             y = c[1]
-            rayy(d, slope, x, y)
+            rayy(d, slope, x, y, 0)
 
-def rayx(d, slope, x, y):
+def rayx(d, slope, x, y, e):
+    if e > 50:
+        return
+    e += 1
     if d*slope < 0:
         cy = math.floor(y)
     else:
@@ -113,9 +116,12 @@ def rayx(d, slope, x, y):
     except: pass
     else:
         y = cy
-        rayy(d, slope, x, y)
+        rayy(d, slope, x, y, e)
 
-def rayy(d, slope, x, y):
+def rayy(d, slope, x, y, e):
+    if e > 50:
+        return
+    e += 1
     if d < 0:
         cx = math.floor(x)
     else:
@@ -137,7 +143,7 @@ def rayy(d, slope, x, y):
     else:
         x = cx
 ##            print("Beef")
-        rayx(d, slope, x, y)
+        rayx(d, slope, x, y, e)
 
 span = 15
 turnspeed = 3
@@ -171,6 +177,8 @@ while True:
                 mouseangle = math.atan(-(my-360)/(mx-640))+math.pi/2
             if mx < 640: mouseangle += math.pi
     peef = player.rotation-mouseangle
+    if peef >= math.pi: peef -= 2*math.pi
+    if peef <= -math.pi: peef += 2*math.pi
     if abs(peef) <= turnspeed*dt or abs(peef)>=2*math.pi-turnspeed*dt:
         player.rotation = mouseangle
     else:
