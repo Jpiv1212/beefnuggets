@@ -208,6 +208,8 @@ while True:
             cd = 1
         else:
             cd = -1
+        if angle == 0: angle = 0.001
+        if angle == math.pi: angle = math.pi+0.001
         raycast(1/math.tan(angle),cd)
     for i in range(-span,span+1):
         angle = (player.rotation+i/span*math.pi/3)%(2*math.pi)
@@ -215,7 +217,7 @@ while True:
             cd = 1
         else:
             cd = -1
-        pygame.draw.line(disp, (255,0,0), (640,360), (640+2000*cd, 360+2000/math.tan(angle)*cd))
+##        pygame.draw.line(disp, (255,0,0), (640,360), (640+2000*cd, 360+2000/math.tan(angle)*cd))
 ##    for thing in things:
 ##              thing.render()
     pygame.display.flip()
