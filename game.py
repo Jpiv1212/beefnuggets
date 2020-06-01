@@ -1,6 +1,6 @@
 import pygame, random, sys, time, math
 pygame.init()
-disp = pygame.display.set_mode((1280,720), pygame.FULLSCREEN)
+disp = pygame.display.set_mode((1280,720))#, pygame.FULLSCREEN)
 class Player():
     models = [pygame.image.load("stuff\\player1.png").convert(),
               pygame.image.load("stuff\\player2.png").convert(),
@@ -279,14 +279,13 @@ span = 36
 ##span = 58
 turnspeed = 3
 mouseangle = 0
-t = time.time()
+clock = pygame.time.Clock()
+clock.tick()
 font = pygame.font.SysFont(pygame.font.get_default_font(), 60)
 while True:
     disp.fill((0,0,0))
-    nt = time.time()
-    dt = nt-t
+    dt = clock.tick(40)/1000
 ##    print(nt-t)
-    t = nt
 ##    print(player.rotation)
     for event in pygame.event.get():
         if event.type == pygame.QUIT: pygame.quit(); sys.exit()
@@ -355,6 +354,6 @@ while True:
 
     player.render()
             
-    fps = font.render(str(round(10/dt)/10),False,(255,0,0))
+    fps = font.render(str(round(10*clock.get_fps())/10),False,(255,0,0))
     disp.blit(fps, (24,24))
     pygame.display.flip()
