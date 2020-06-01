@@ -26,17 +26,39 @@ class Thing():
         disp.blit(self.image, (640+self.posx-player.posx, 360+self.posy-player.posy))
         return self.solid
 
-things = []
+##things = []
 grasses = [pygame.image.load("stuff\\grass1.png").convert(),pygame.image.load("stuff\\grass2.png").convert(),pygame.image.load("stuff\\grass3.png").convert()]
 ##things.append(Thing((0,0),pygame.image.load("stuff\\freef.png").convert()))
-for i in range(40):
-    things.append([])
-    for j in range(40):
-        things[i].append(Thing((i*48,j*48),random.choice(grasses)))
+##for i in range(40):
+##    things.append([])
+##    for j in range(40):
+##        things[i].append(Thing((i*48,j*48),random.choice(grasses)))
+##
+##for i in range(10,30):
+##    things[i][30] = Thing((i*48,30*48),pygame.image.load("stuff\\wall.png").convert(), True)
+##    things[i][10] = Thing((i*48,10*48),pygame.image.load("stuff\\wall.png").convert(), True)
+##    things[10][i] = Thing((10*48,i*48),pygame.image.load("stuff\\wall.png").convert(), True)
+##    things[30][i] = Thing((30*48,i*48),pygame.image.load("stuff\\wall.png").convert(), True)
+##
+##for i in range(18,22):
+##    things[30][i] = Thing((30*48,i*48),random.choice(grasses))
 
-things[30][30] = Thing((30*48,30*48),pygame.image.load("stuff\\wall.png").convert(), True)
-things[31][30] = Thing((31*48,30*48),pygame.image.load("stuff\\wall.png").convert(), True)
-things[32][30] = Thing((32*48,30*48),pygame.image.load("stuff\\wall.png").convert(), True)
+tiles = {(127,127,127,255):([pygame.image.load("stuff\\wall.png").convert()], True),
+         (34,177,76,255):(grasses, False)}
+
+def loadlevel(filename):
+    mapp = pygame.image.load(filename).convert()
+    w,h = mapp.get_size()
+    out = []
+    for j in range(h):
+        out.append([])
+        for i in range(w):
+            color = tuple(mapp.get_at((j,i)))
+##            print(color)
+            out[j].append(Thing((j*48,i*48),random.choice(tiles[color][0]),tiles[color][1]))
+    return out
+
+things = loadlevel("stuff\\test.png")
 
 incrementors = ((1,1),(-1,1),(1,-1),(-1,-1))
 def raycast(slope, d):
