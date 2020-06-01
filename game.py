@@ -28,6 +28,7 @@ class Thing():
 
 ##things = []
 grasses = [pygame.image.load("stuff\\grass1.png").convert(),pygame.image.load("stuff\\grass2.png").convert(),pygame.image.load("stuff\\grass3.png").convert()]
+walls = [pygame.image.load("stuff\\wall1.png").convert(),pygame.image.load("stuff\\wall2.png").convert(),pygame.image.load("stuff\\wall3.png").convert()]
 ##things.append(Thing((0,0),pygame.image.load("stuff\\freef.png").convert()))
 ##for i in range(40):
 ##    things.append([])
@@ -43,7 +44,7 @@ grasses = [pygame.image.load("stuff\\grass1.png").convert(),pygame.image.load("s
 ##for i in range(18,22):
 ##    things[30][i] = Thing((30*48,i*48),random.choice(grasses))
 
-tiles = {(127,127,127,255):([pygame.image.load("stuff\\wall.png").convert()], True),
+tiles = {(127,127,127,255):(walls, True),
          (34,177,76,255):(grasses, False)}
 
 def loadlevel(filename):
@@ -54,15 +55,108 @@ def loadlevel(filename):
         out.append([])
         for i in range(w):
             color = tuple(mapp.get_at((j,i)))
-##            print(color)
             out[j].append(Thing((j*48,i*48),random.choice(tiles[color][0]),tiles[color][1]))
     return out
 
-things = loadlevel("stuff\\test.png")
+def loadlevel2(filename):
+    mapp = pygame.image.load(filename).convert()
+    w,h = mapp.get_size()
+    out = []
+    for j in range(h*2):
+        out.append([None]*(w*2))
+    for j in range(h):
+        for i in range(w):
+            color = tuple(mapp.get_at((j,i)))
+            tile = random.choice(tiles[color][0])
+            solid = tiles[color][1]
+            out[2*j][2*i] = Thing((j*48,i*48),tile.subsurface((0,0,24,24)),solid)
+            out[2*j+1][2*i] = Thing((j*48+24,i*48),tile.subsurface((24,0,24,24)),solid)
+            out[2*j][2*i+1] = Thing((j*48,i*48+24),tile.subsurface((24,0,24,24)),solid)
+            out[2*j+1][2*i+1] = Thing((j*48+24,i*48+24),tile.subsurface((24,24,24,24)),solid)
+    return out
+
+def loadlevel3(filename):
+    mapp = pygame.image.load(filename).convert()
+    w,h = mapp.get_size()
+    out = []
+    for j in range(h*4):
+        out.append([None]*(w*4))
+    for j in range(h):
+        for i in range(w):
+            color = tuple(mapp.get_at((j,i)))
+            tile = random.choice(tiles[color][0])
+            solid = tiles[color][1]
+            out[4*j][4*i] = Thing((j*48,i*48),tile.subsurface((0,0,12,12)),solid)
+            out[4*j+1][4*i] = Thing((j*48+12,i*48),tile.subsurface((12,0,12,12)),solid)
+            out[4*j+2][4*i] = Thing((j*48+24,i*48),tile.subsurface((24,0,12,12)),solid)
+            out[4*j+3][4*i] = Thing((j*48+36,i*48),tile.subsurface((36,0,12,12)),solid)
+            out[4*j][4*i+1] = Thing((j*48,i*48+12),tile.subsurface((0,12,12,12)),solid)
+            out[4*j+1][4*i+1] = Thing((j*48+12,i*48+12),tile.subsurface((12,12,12,12)),solid)
+            out[4*j+2][4*i+1] = Thing((j*48+24,i*48+12),tile.subsurface((24,12,12,12)),solid)
+            out[4*j+3][4*i+1] = Thing((j*48+36,i*48+12),tile.subsurface((36,12,12,12)),solid)
+            out[4*j][4*i+2] = Thing((j*48,i*48+24),tile.subsurface((0,24,12,12)),solid)
+            out[4*j+1][4*i+2] = Thing((j*48+12,i*48+24),tile.subsurface((12,24,12,12)),solid)
+            out[4*j+2][4*i+2] = Thing((j*48+24,i*48+24),tile.subsurface((24,24,12,12)),solid)
+            out[4*j+3][4*i+2] = Thing((j*48+36,i*48+24),tile.subsurface((36,24,12,12)),solid)
+            out[4*j][4*i+3] = Thing((j*48,i*48+36),tile.subsurface((0,36,12,12)),solid)
+            out[4*j+1][4*i+3] = Thing((j*48+12,i*48+36),tile.subsurface((12,36,12,12)),solid)
+            out[4*j+2][4*i+3] = Thing((j*48+24,i*48+36),tile.subsurface((24,36,12,12)),solid)
+            out[4*j+3][4*i+3] = Thing((j*48+36,i*48+36),tile.subsurface((36,36,12,12)),solid)
+    return out
+
+def loadlevel4(filename):
+    mapp = pygame.image.load(filename).convert()
+    w,h = mapp.get_size()
+    out = []
+    for j in range(h*4):
+        out.append([None]*(w*4))
+    for j in range(h):
+        for i in range(w):
+            color = tuple(mapp.get_at((j,i)))
+            tile = random.choice(tiles[color][0])
+            solid = tiles[color][1]
+            if not solid:
+                out[4*j][4*i] = Thing((j*48,i*48),tile.subsurface((0,0,12,12)),solid)
+                out[4*j+1][4*i] = Thing((j*48+12,i*48),tile.subsurface((12,0,12,12)),solid)
+                out[4*j+2][4*i] = Thing((j*48+24,i*48),tile.subsurface((24,0,12,12)),solid)
+                out[4*j+3][4*i] = Thing((j*48+36,i*48),tile.subsurface((36,0,12,12)),solid)
+                out[4*j][4*i+1] = Thing((j*48,i*48+12),tile.subsurface((0,12,12,12)),solid)
+                out[4*j+1][4*i+1] = Thing((j*48+12,i*48+12),tile.subsurface((12,12,12,12)),solid)
+                out[4*j+2][4*i+1] = Thing((j*48+24,i*48+12),tile.subsurface((24,12,12,12)),solid)
+                out[4*j+3][4*i+1] = Thing((j*48+36,i*48+12),tile.subsurface((36,12,12,12)),solid)
+                out[4*j][4*i+2] = Thing((j*48,i*48+24),tile.subsurface((0,24,12,12)),solid)
+                out[4*j+1][4*i+2] = Thing((j*48+12,i*48+24),tile.subsurface((12,24,12,12)),solid)
+                out[4*j+2][4*i+2] = Thing((j*48+24,i*48+24),tile.subsurface((24,24,12,12)),solid)
+                out[4*j+3][4*i+2] = Thing((j*48+36,i*48+24),tile.subsurface((36,24,12,12)),solid)
+                out[4*j][4*i+3] = Thing((j*48,i*48+36),tile.subsurface((0,36,12,12)),solid)
+                out[4*j+1][4*i+3] = Thing((j*48+12,i*48+36),tile.subsurface((12,36,12,12)),solid)
+                out[4*j+2][4*i+3] = Thing((j*48+24,i*48+36),tile.subsurface((24,36,12,12)),solid)
+                out[4*j+3][4*i+3] = Thing((j*48+36,i*48+36),tile.subsurface((36,36,12,12)),solid)
+            else:
+                thing = Thing((j*48,i*48),tile,solid)
+                out[4*j][4*i] = thing
+                out[4*j+1][4*i] = thing
+                out[4*j+2][4*i] = thing
+                out[4*j+3][4*i] = thing
+                out[4*j][4*i+1] = thing
+                out[4*j+1][4*i+1] = thing
+                out[4*j+2][4*i+1] = thing
+                out[4*j+3][4*i+1] = thing
+                out[4*j][4*i+2] = thing
+                out[4*j+1][4*i+2] = thing
+                out[4*j+2][4*i+2] = thing
+                out[4*j+3][4*i+2] = thing
+                out[4*j][4*i+3] = thing
+                out[4*j+1][4*i+3] = thing
+                out[4*j+2][4*i+3] = thing
+                out[4*j+3][4*i+3] = thing
+    return out
+
+things = loadlevel4("stuff\\test.png")
 
 incrementors = ((1,1),(-1,1),(1,-1),(-1,-1))
 def raycast(slope, d):
-    x,y = player.posx/48,player.posy/48
+    x,y = player.posx/12,player.posy/12
     if slope > 0:
         if d > 0:
             c = math.ceil(x),math.ceil(y)
@@ -75,7 +169,9 @@ def raycast(slope, d):
             c = math.floor(x),math.ceil(y)
     cx,cy = c
     try:things[math.floor(x)][math.floor(y)].render()
-    except: return
+    except Exception as e:
+        print(e)
+        return
     if abs((c[1]-y)/(c[0]-x))<abs(slope):
         oy = y
         y += d*abs(c[0]-x)*slope
@@ -115,9 +211,9 @@ def raycast(slope, d):
             rayy(d, slope, x, y, 0)
 
 def rayx(d, slope, x, y, e):
-    if e > 50:
-        return
-    e += 1
+##    if e > 50:
+##        return
+##    e += 1
     if d*slope < 0:
         cy = math.floor(y)
     else:
@@ -137,13 +233,14 @@ def rayx(d, slope, x, y, e):
 ##                things[int(x2)][int(y)].render()
     except: pass
     else:
+        if abs(player.posx-x*12) > 640: return
         y = cy
         rayy(d, slope, x, y, e)
 
 def rayy(d, slope, x, y, e):
-    if e > 50:
-        return
-    e += 1
+##    if e > 50:
+##        return
+##    e += 1
     if d < 0:
         cx = math.floor(x)
     else:
@@ -163,14 +260,17 @@ def rayy(d, slope, x, y, e):
 ##                things[int(x)][int(y2)].render()
     except: pass
     else:
+        if abs(player.posy-y*12) > 360: return
         x = cx
 ##            print("Beef")
         rayx(d, slope, x, y, e)
 
-span = 15
+span = 30
+##span = 58
 turnspeed = 3
 mouseangle = 0
 t = time.time()
+font = pygame.font.SysFont(pygame.font.get_default_font(), 60)
 while True:
     disp.fill((0,0,0))
     nt = time.time()
@@ -242,4 +342,6 @@ while True:
 ##        pygame.draw.line(disp, (255,0,0), (640,360), (640+2000*cd, 360+2000/math.tan(angle)*cd))
 ##    for thing in things:
 ##              thing.render()
+    fps = font.render(str(round(10/dt)/10),False,(255,0,0))
+    disp.blit(fps, (24,24))
     pygame.display.flip()
