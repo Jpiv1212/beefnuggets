@@ -1,11 +1,22 @@
 import pygame, random, sys, time, math
 pygame.init()
-disp = pygame.display.set_mode((1280,720))
+disp = pygame.display.set_mode((1280,720), pygame.FULLSCREEN)
 class Player():
+    models = [pygame.image.load("stuff\\player1.png").convert(),
+              pygame.image.load("stuff\\player2.png").convert(),
+              pygame.image.load("stuff\\player3.png").convert(),
+              pygame.image.load("stuff\\player4.png").convert()]
     def __init__(self):
         self.posx = 960.01
         self.posy = 960.01
         self.rotation = 1.46
+        for model in Player.models:
+            model.set_colorkey((255,255,255))
+
+    def render(self):
+        step = int((self.rotation+math.pi/4)%(math.pi*2)//(math.pi/2))
+        model = Player.models[step]
+        disp.blit(model, ((640-model.get_width()//2,360-model.get_height()//2)))
 player = Player()
 
 class Thing():
@@ -170,7 +181,6 @@ def raycast(slope, d):
     cx,cy = c
     try:things[math.floor(x)][math.floor(y)].render()
     except Exception as e:
-        print(e)
         return
     if abs((c[1]-y)/(c[0]-x))<abs(slope):
         oy = y
@@ -265,7 +275,7 @@ def rayy(d, slope, x, y, e):
 ##            print("Beef")
         rayx(d, slope, x, y, e)
 
-span = 30
+span = 36
 ##span = 58
 turnspeed = 3
 mouseangle = 0
@@ -342,6 +352,9 @@ while True:
 ##        pygame.draw.line(disp, (255,0,0), (640,360), (640+2000*cd, 360+2000/math.tan(angle)*cd))
 ##    for thing in things:
 ##              thing.render()
+
+    player.render()
+            
     fps = font.render(str(round(10/dt)/10),False,(255,0,0))
     disp.blit(fps, (24,24))
     pygame.display.flip()
