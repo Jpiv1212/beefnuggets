@@ -221,9 +221,9 @@ def raycast(slope, d):
             rayy(d, slope, x, y, 0)
 
 def rayx(d, slope, x, y, e):
-##    if e > 50:
-##        return
-##    e += 1
+    if e > 100:
+        return
+    e += 1
     if d*slope < 0:
         cy = math.floor(y)
     else:
@@ -248,9 +248,9 @@ def rayx(d, slope, x, y, e):
         rayy(d, slope, x, y, e)
 
 def rayy(d, slope, x, y, e):
-##    if e > 50:
-##        return
-##    e += 1
+    if e > 100:
+        return
+    e += 1
     if d < 0:
         cx = math.floor(x)
     else:
